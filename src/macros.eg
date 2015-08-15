@@ -1,8 +1,8 @@
-require: backbone
 provide: model
 macro model(`{^name, ^body}`) =
+   let b = @mark(`backbone`)
    ```
-   ^name = backbone.Model.extend with {
+   ^name = [^b].Model.extend with {
       ^body
    }
    ```

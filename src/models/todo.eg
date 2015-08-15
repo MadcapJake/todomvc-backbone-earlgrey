@@ -1,7 +1,6 @@
+require-macros: "../macros.eg" -> model
 require: backbone
 provide: Todo
-
-
 
 model Todo:
    defaults = {
