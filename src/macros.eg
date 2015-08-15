@@ -1,8 +1,17 @@
-provide: model
+provide: model, collection
+
 macro model(`{^name, ^body}`) =
    let b = @mark(`backbone`)
    ```
    ^name = [^b].Model.extend with {
+      ^body
+   }
+   ```
+
+macro collection(`{^name, ^body}`) =
+   let b = @mark(`backbone`)
+   ```
+   ^name = [^b].Collection.extend with {
       ^body
    }
    ```

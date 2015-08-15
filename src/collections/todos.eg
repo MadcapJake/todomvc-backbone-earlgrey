@@ -1,0 +1,27 @@
+require:
+   backbone
+   backbone-localstorage as ls
+   "../models/todo.eg" as Todo
+require-macros: "../macros.eg" -> collection
+provide: Todos
+
+backbone.LocalStorage = ls
+
+collection TodoList:
+   model = Todo
+
+   local-storage = new backbone.LocalStorage("todos-backbone")
+
+   completed = -> this.filter with todo -> todo.get(.completed)
+
+   remaining = -> this.without.apply(this) with this.completed()
+
+   next-order = ->
+      if not this.length:
+         1
+      else:
+         this.last().get(.order) + 1
+
+   comparator = todo -> todo.get(.order)
+
+Todos = new TodoList()
