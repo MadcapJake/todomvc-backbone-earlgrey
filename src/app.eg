@@ -1,24 +1,8 @@
 require:
-   backbone as Backbone
-   underscore -> extend
    jquery as $
+   "./views/app.eg" as AppView
 
-
-
-TodoRouter = Backbone.Router.extend with {
-   routes = {
-      "about"                => .show-about
-      "search/:query"        => .search-todos
-      "search/:query/p:page" => .search-todos
-   }
-
-   show-about = -> pass
-
-   search-todos = (query, page) ->
-      page-number = page or 1
-      print 'Page number: {page-number} of the results for todos containing the word {query}'
-}
-
-my-router = new TodoRouter()
-
-Backbone.history.start()
+$ with ->
+   print "Initializing app"
+   app = new AppView()
+   print app

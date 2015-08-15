@@ -1,13 +1,11 @@
 require:
    backbone
-   backbone-localstorage as ls
+   "backbone.localstorage" as ls
    "../models/todo.eg" as Todo
-require-macros: "../macros.eg" -> collection
-provide: Todos
 
 backbone.LocalStorage = ls
 
-collection TodoList:
+TodoList = backbone.Collection.extend with {
    model = Todo
 
    local-storage = new backbone.LocalStorage("todos-backbone")
@@ -24,4 +22,6 @@ collection TodoList:
 
    comparator = todo -> todo.get(.order)
 
-Todos = new TodoList()
+}
+
+module.exports = new TodoList()

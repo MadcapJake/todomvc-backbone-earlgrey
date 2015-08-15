@@ -1,9 +1,8 @@
-require: /html as h
 module.exports = (remaining, completed) ->
    %
       span.todo-count %
          strong % remaining
-         'item{if remaining === 1: ""; else: "s"} left'
+         ' item{if remaining === 1: ""; else: "s"} left'
       ul.filters %
          li %
             a.selected %
@@ -21,5 +20,3 @@ module.exports = (remaining, completed) ->
          if completed: button.clear-completed % 'Clear completed {completed}'
          else: ""
       ]
-
-print h(module.exports(1, 0))

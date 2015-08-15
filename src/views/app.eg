@@ -1,0 +1,108 @@
+require:
+   backbone
+   jquery as $
+   underscore -> invoke
+   "../views/todo.eg" as TodoView
+   "../collections/todos.eg" as Todos
+   "../templates/stats.eg" as stats-tpl
+   /html
+;;require-macros: "../macros.eg" -> view
+globals: TodoFilter
+
+ENTER_KEY = 13
+
+module.exports = backbone.View.extend with {
+
+   el = ".todoapp"
+
+
+   stats-template = (remaining, completed) ->
+      html(stats-tpl(remaining, completed))
+
+
+   events = {
+      "keypress .new-todo"     => .create-on-enter
+      "click .clear-completed" => .clear-completed
+      "click .toggle-all"      => .toggle-all-complete
+   }
+
+
+   initialize = ->
+      print "Initializing AppView"
+      this.all-checkbox = this.$(".toggle-all")
+      this.$input       = this.$(".new-todo")
+      this.$footer      = this.$(".footer")
+      this.$main        = this.$(".main")
+
+      this.listen-to(Todos, .add,   this.add-one)
+      this.listen-to(Todos, .reset, this.add-all)
+
+      this.listen-to(Todos, "change:completed", this.filter-one)
+      this.listen-to(Todos, "filter",           this.filter-all)
+      this.listen-to(Todos, "all",              this.render)
+
+      Todos.fetch()
+
+
+   render = ->
+      completed = Todos.completed().length
+      remaining = Todos.remaining().length
+
+      if Todos.length:
+         this.$main.show()
+         this.$footer.show()
+
+         this.$footer.html(this.stats-template(completed, remaining))
+
+         chain this.$("#filters li a"):
+            @remove-class: .selected
+            @filter: '[href="#/{TodoFilter or ""}"]'
+            @add-class: .selected
+      else:
+         this.$main.hide()
+         this.$footer.hide()
+
+      this.all-checkbox.checked = not remaining
+
+
+   add-one = todo ->
+      view = new TodoView({ model = todo })
+      $(".todo-list").append(view.render().el)
+
+
+   add-all = ->
+      this.$(".todo-list").html("")
+      Todos.for-each(this.add-one, this)
+
+
+   filter-one = todo -> todo.trigger(.visible)
+
+
+   filter-all = -> Todos.for-each(this.filter-one, this)
+
+
+   new-attributes = -> {
+      title = this.$input.val().trim()
+      order = Todos.next-order()
+      completed = false
+   }
+
+
+   create-on-enter = event ->
+      print "Initialize create-on-enter"
+      if event.which != ENTER_KEY or not this.$input.val().trim(): return
+      print "Enter key was pressed and a value is present."
+      Todos.create(this.new-attributes())
+      this.$input.val("")
+
+
+   clear-completed = ->
+      invoke Todos.completed(): .destroy
+      false
+
+   toggle-all-complete = ->
+      completed = this.all-checkbox.checked
+
+      Todos.for-each with todo -> todo.save({ completed = completed })
+
+}

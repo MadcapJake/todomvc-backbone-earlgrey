@@ -1,4 +1,4 @@
-provide: model, collection
+provide: model, collection, view
 
 macro model(`{^name, ^body}`) =
    let b = @mark(`backbone`)
@@ -12,6 +12,13 @@ macro collection(`{^name, ^body}`) =
    let b = @mark(`backbone`)
    ```
    ^name = [^b].Collection.extend with {
+      ^body
+   }
+   ```
+macro view(`{^name, ^body}`) =
+   let b = @mark(`backbone`)
+   ```
+   ^name = [^b].View.extend with {
       ^body
    }
    ```

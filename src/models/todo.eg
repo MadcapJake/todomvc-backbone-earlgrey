@@ -1,8 +1,6 @@
-require-macros: "../macros.eg" -> model
 require: backbone
-provide: Todo
+module.exports = backbone.Model.extend with {
 
-model Todo:
    defaults = {
       title = ""
       completed = false
@@ -10,3 +8,5 @@ model Todo:
 
    toggle = ->
       this.save with { completed = not this.get(.completed) }
+
+}

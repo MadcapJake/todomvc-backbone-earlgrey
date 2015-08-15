@@ -1,0 +1,83 @@
+require:
+   backbone
+   jquery as $
+   "../templates/item.eg" as item-tpl
+   /html
+
+ENTER_KEY = 13
+
+module.exports = backbone.View.extend with {
+
+   tag-name = .li
+
+
+   template = title ->
+      html(item-tpl(title))
+
+
+   events = {
+      "click .toggle"  => .toggle-completed
+      "dblclick label" => .edit
+      "click .destroy" => .clear
+      "keypress .edit" => .update-on-enter
+      "blur .edit"     => .close
+   }
+
+
+   initialize = ->
+      print "Initializing TodoView"
+      this.listen-to(this.model, .change,  this.render)
+      this.listen-to(this.model, .destroy, this.remove)
+      this.listen-to(this.model, .visible, this.toggle-visible)
+
+
+   render = ->
+      this.$el.html(this.template(this.model.attributes.title))
+
+      if this.model.get(.completed):
+         this.$(".toggle").prop(.checked)
+
+      this.$el.toggle-class(.completed, this.model.get(.completed))
+      this.toggle-visible()
+
+      this.$input = this.$(".edit")
+      this
+
+
+   toggle-visible = -> this.$el.toggle-class(.hidden, this.is-hidden())
+
+
+   is-hidden = ->
+      is-completed = this.model.get(.completed)
+      this.any with
+         not is-completed and TodoFilter == .completed
+         is-completed and TodoFilter == .active
+
+
+   toggle-completed = -> this.model.toggle()
+
+
+   edit = ->
+      this.$el.add-class(.editing)
+      this.$input.focus()
+
+
+   close = ->
+      value = this.$input.val().trim()
+
+      if value:
+         this.model.save({ title = value })
+      else:
+         this.clear()
+
+      this.$el.remove-class(.editing)
+
+
+   update-on-enter = e ->
+      if e.which == ENTER_KEY: this.close()
+
+
+   clear = -> this.model.destroy()
+
+
+}
