@@ -1,0 +1,8 @@
+require: backbone
+provide: model
+macro model(`{^name, ^body}`) =
+   ```
+   ^name = backbone.Model.extend with {
+      ^body
+   }
+   ```

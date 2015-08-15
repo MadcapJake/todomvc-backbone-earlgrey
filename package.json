@@ -1,0 +1,23 @@
+{
+  "name": "backbone-todo-earlgrey",
+  "version": "0.0.0",
+  "description": "Backbone Todo app written in Earl Grey",
+  "main": "app.eg",
+  "scripts": {
+    "start": "webpack-dev-server --content-base build/ --hot",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jake Russo",
+  "license": "MIT",
+  "devDependencies": {
+    "earlgrey-loader": "^0.1.4",
+    "webpack": "^1.11.0",
+    "webpack-dev-server": "^1.10.1"
+  },
+  "dependencies": {
+    "backbone": "^1.2.1",
+    "backbone-localstorage": "^0.3.2",
+    "jquery": "^2.1.4",
+    "underscore": "^1.8.3"
+  }
+}

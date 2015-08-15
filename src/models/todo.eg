@@ -1,0 +1,13 @@
+require: backbone
+provide: Todo
+
+
+
+model Todo:
+   defaults = {
+      title = ""
+      completed = false
+   }
+
+   toggle = ->
+      this.save with { completed = not this.get(.completed) }
