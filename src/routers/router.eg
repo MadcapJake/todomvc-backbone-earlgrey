@@ -1,0 +1,26 @@
+require:
+   backbone
+   "../collections/todos.eg" as Todos
+
+Workspace = backbone.Router.extend with {
+
+
+   routes = {
+      "*filter" => .set-filter
+   }
+
+   todo-filter = undefined
+
+   set-filter = var param ->
+      if param: param = param.trim()
+
+      this.todo-filter = param or ""
+
+      ;; Trigger a collection filter event, causing hiding/unhiding
+      ;; of Todo view items
+      Todos.trigger(.filter)
+
+}
+router = new Workspace()
+backbone.history.start()
+module.exports = router

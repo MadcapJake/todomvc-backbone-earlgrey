@@ -1,6 +1,8 @@
 require:
    backbone
    jquery as $
+   underscore as _u
+   "../routers/router.eg" as router
    "../templates/item.eg" as item-tpl
    /html
 
@@ -25,7 +27,6 @@ module.exports = backbone.View.extend with {
 
 
    initialize = ->
-      print "Initializing TodoView"
       this.listen-to(this.model, .change,  this.render)
       this.listen-to(this.model, .destroy, this.remove)
       this.listen-to(this.model, .visible, this.toggle-visible)
@@ -44,14 +45,16 @@ module.exports = backbone.View.extend with {
       this
 
 
-   toggle-visible = -> this.$el.toggle-class(.hidden, this.is-hidden())
+   toggle-visible = ->
+      this.$el.toggle-class(.hidden, this.is-hidden())
 
 
    is-hidden = ->
-      is-completed = this.model.get(.completed)
-      this.any with
-         not is-completed and TodoFilter == .completed
-         is-completed and TodoFilter == .active
+      task-completed = this.model.get(.completed)
+      match router.todo-filter:
+         == .completed when not task-completed -> true
+         == .active when task-completed -> true
+         else -> false
 
 
    toggle-completed = -> this.model.toggle()

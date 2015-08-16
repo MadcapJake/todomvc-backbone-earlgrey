@@ -2,12 +2,12 @@ require:
    backbone
    jquery as $
    underscore -> invoke
+   "../routers/router.eg" as router
    "../views/todo.eg" as TodoView
    "../collections/todos.eg" as Todos
    "../templates/stats.eg" as stats-tpl
    /html
-;;require-macros: "../macros.eg" -> view
-globals: TodoFilter
+
 
 ENTER_KEY = 13
 
@@ -28,7 +28,6 @@ module.exports = backbone.View.extend with {
 
 
    initialize = ->
-      print "Initializing AppView"
       this.all-checkbox = this.$(".toggle-all")
       this.$input       = this.$(".new-todo")
       this.$footer      = this.$(".footer")
@@ -54,9 +53,9 @@ module.exports = backbone.View.extend with {
 
          this.$footer.html(this.stats-template(completed, remaining))
 
-         chain this.$("#filters li a"):
+         chain this.$(".filters li a"):
             @remove-class: .selected
-            @filter: '[href="#/{TodoFilter or ""}"]'
+            @filter: '[href="#/{router.todo-filter or ""}"]'
             @add-class: .selected
       else:
          this.$main.hide()
@@ -75,10 +74,12 @@ module.exports = backbone.View.extend with {
       Todos.for-each(this.add-one, this)
 
 
-   filter-one = todo -> todo.trigger(.visible)
+   filter-one = todo ->
+      todo.trigger(.visible)
 
 
-   filter-all = -> Todos.for-each(this.filter-one, this)
+   filter-all = ->
+      Todos.for-each(this.filter-one, this)
 
 
    new-attributes = -> {
@@ -89,9 +90,7 @@ module.exports = backbone.View.extend with {
 
 
    create-on-enter = event ->
-      print "Initialize create-on-enter"
       if event.which != ENTER_KEY or not this.$input.val().trim(): return
-      print "Enter key was pressed and a value is present."
       Todos.create(this.new-attributes())
       this.$input.val("")
 

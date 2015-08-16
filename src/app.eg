@@ -3,6 +3,4 @@ require:
    "./views/app.eg" as AppView
 
 $ with ->
-   print "Initializing app"
    app = new AppView()
-   print app

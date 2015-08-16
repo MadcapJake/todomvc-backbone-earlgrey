@@ -1,4 +1,4 @@
-module.exports = (remaining, completed) ->
+module.exports = (completed, remaining) ->
    %
       span.todo-count %
          strong % remaining
